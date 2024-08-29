@@ -21,7 +21,7 @@ namespace BulkyWeb.Areas.Admin.Controllers
         }
         public IActionResult Index()
         {
-            List<Product> products = _uow.Product.GetAll().ToList();
+            List<Product> products = _uow.Product.GetAll(includeProperties: "Category").ToList();
            
             return View(products);
         }

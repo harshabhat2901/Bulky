@@ -19,25 +19,44 @@ namespace Bulky.DataAccess.Repository
         {
             _db = db;
             this.dbSet = _db.Set<T>();
+            _db.Products.Include(u => u.Category).Include(u => u.CategoryId);
         }
         public void Add(T entity)
         {
             this.dbSet.Add(entity);
         }
 
-        public T Get(Expression<Func<T, bool>> filter)
+        public T Get(Expression<Func<T, bool>> filter, string? includeproperties = null)
         {
-            return dbSet.Where(filter).FirstOrDefault();
-            //IQueryable<T> query = dbSet;
-            //query = query.Where(filter);
-            //return query.FirstOrDefault();
+            //return dbSet.Where(filter).FirstOrDefault();
+            IQueryable<T> query = dbSet;
+            query = query.Where(filter);
+            if (!string.IsNullOrEmpty(includeproperties))
+            {
+                foreach (var includeProp in includeproperties
+                    .Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+                {
+                    query = query.Include(includeProp);
+                }
+            }
+            return query.FirstOrDefault();
         }
 
-        public IEnumerable<T> GetAll()
+        public IEnumerable<T> GetAll(string? includeproperties = null)
         {
-            return dbSet.ToList();
-            //IQueryable<T> query = dbSet;
-            //return query.ToList();
+            // return dbSet.ToList();
+            IQueryable<T> query = dbSet;
+
+            if(!string.IsNullOrEmpty(includeproperties))
+            {
+                foreach (var includeProp in includeproperties
+                    .Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+                {
+                    query= query.Include(includeProp);
+                }
+            }
+
+            return query.ToList();
         }
 
         public void Remove(T entity)
