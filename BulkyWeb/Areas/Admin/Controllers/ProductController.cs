@@ -13,9 +13,11 @@ namespace BulkyWeb.Areas.Admin.Controllers
     public class ProductController : Controller
     {
         private readonly IUnitOfWork _uow;
-        public ProductController(IUnitOfWork unitOfWork)
+        private readonly IWebHostEnvironment _webHostEnvironment;
+        public ProductController(IUnitOfWork unitOfWork, IWebHostEnvironment webHostEnvironment)
         {
             _uow = unitOfWork;
+            _webHostEnvironment = webHostEnvironment;
         }
         public IActionResult Index()
         {
@@ -56,7 +58,32 @@ namespace BulkyWeb.Areas.Admin.Controllers
 
             if (ModelState.IsValid)
             {
-                _uow.Product.Add(prdVM.Product);
+                if(file !=null)
+                {
+                    string wwwRootPath = _webHostEnvironment.WebRootPath;
+                    string filename = Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
+                    string folderpath = Path.Combine(_webHostEnvironment.WebRootPath, @"Images\Product");
+
+                    if(!string.IsNullOrEmpty(prdVM.Product.ImageURL)) 
+                    {
+                        var oldImagePath = Path.Combine(wwwRootPath, prdVM.Product.ImageURL.TrimStart('\\'));
+                        if(System.IO.File.Exists(oldImagePath))
+                            System.IO.File.Delete(oldImagePath);
+                    }
+
+                    using (var filestream = new FileStream(Path.Combine(folderpath, filename), FileMode.Create))
+                    {
+                        file.CopyTo(filestream);
+                    }
+                    prdVM.Product.ImageURL= Path.Combine(@"\Images\Product", filename);
+
+                }
+                if(prdVM.Product.Id == 0)
+                 {
+                    _uow.Product.Add(prdVM.Product);
+                }
+                else
+                    _uow.Product.Update(prdVM.Product);
                 _uow.Save();
                 TempData["Success"] = "Product Created Successfully";
                 return RedirectToAction("Index");
