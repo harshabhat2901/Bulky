@@ -7,6 +7,12 @@ a.navbar-brand {
     word-break: break-all;
 }
 
+.container img {
+
+
+    object-fit: contain;
+} 
+
 
 
 .nav-pills .nav-link.active, .nav-pills .show > .nav-link {

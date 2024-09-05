@@ -4,6 +4,7 @@ using Bulky.Models.Models;
 using Bulky.Models.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.DotNet.Scaffolding.Shared.Messaging;
 using System.Collections.Generic;
 using System.Runtime.Intrinsics.Arm;
 
@@ -101,28 +102,6 @@ namespace BulkyWeb.Areas.Admin.Controllers
         }
 
 
-        public IActionResult Delete(int? id)
-        {
-            if (id == null || id == 0)
-                return NotFound();
-            var prdct = _uow.Product.Get(u => u.Id == id);
-            if (prdct == null)
-                return NotFound();
-
-            return View(prdct);
-        }
-        [HttpPost, ActionName("Delete")]
-        public IActionResult DeletePOST(int? id)
-        {
-            Product? prdct = _uow.Product.Get(u => u.Id == id);
-            if (prdct == null)
-                return NotFound();
-            _uow.Product.Remove(prdct);
-            _uow.Save();
-            TempData["Success"] = "Product Deleted Successfully";
-            return RedirectToAction("Index");
-
-        }
 
         #region APICall
         [HttpGet]
@@ -130,6 +109,24 @@ namespace BulkyWeb.Areas.Admin.Controllers
         {
             List<Product> products = _uow.Product.GetAll(includeProperties: "Category").ToList();
             return Json(new {data = products });
+        }
+        [HttpDelete]
+        public IActionResult Delete(int? id)
+        {
+            Product productToBeDeleted = _uow.Product.Get(u=> u.Id == id);
+            if(productToBeDeleted == null)
+            {
+                return Json(new {success = false, message = "Error While deleting"});
+
+            }
+            var oldImagePath = Path.Combine(_webHostEnvironment.WebRootPath, productToBeDeleted.ImageURL.TrimStart('\\'));
+            if (System.IO.File.Exists(oldImagePath))
+                System.IO.File.Delete(oldImagePath);
+
+            _uow.Product.Remove(productToBeDeleted);
+            _uow.Save();
+            return Json(new { success = true, message = "Deleted Successfully" });
+
         }
         #endregion
     }
