@@ -2,6 +2,8 @@
 using Bulky.Models;
 using Bulky.Models.Models;
 using Bulky.Models.ViewModels;
+using Bulky.Utilities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.DotNet.Scaffolding.Shared.Messaging;
@@ -11,6 +13,7 @@ using System.Runtime.Intrinsics.Arm;
 namespace BulkyWeb.Areas.Admin.Controllers
 {
     [Area("Admin")]
+    [Authorize(Roles = SD.ROLE_ADMIN)]
     public class ProductController : Controller
     {
         private readonly IUnitOfWork _uow;
