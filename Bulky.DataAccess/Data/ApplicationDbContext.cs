@@ -16,6 +16,7 @@ namespace Bulky.DataAccess.Data
 
         public DbSet<Category>  Categories { get; set; }
         public DbSet<Product> Products { get; set; }
+        public DbSet<Company> Companies { get; set; }
 
         public DbSet<ApplicationUser> ApplicationUsers { get; set; }
 
@@ -24,7 +25,7 @@ namespace Bulky.DataAccess.Data
             base.OnModelCreating(modelBuilder);
             // Category Seeding
             modelBuilder.Entity<Category>().HasData(
-                new Category { Id = 1, Name="Action", DisplayOrder = 1 },
+                new Category { Id = 1, Name = "Action", DisplayOrder = 1 },
                 new Category { Id = 2, Name = "SciFi", DisplayOrder = 2 },
                 new Category { Id = 3, Name = "Action", DisplayOrder = 3 }
                 );
@@ -43,7 +44,7 @@ namespace Bulky.DataAccess.Data
                    Price50 = 85,
                    Price100 = 80,
                    CategoryId = 1,
-                   ImageURL=""
+                   ImageURL = ""
                },
                 new Product
                 {
@@ -56,7 +57,7 @@ namespace Bulky.DataAccess.Data
                     Price = 30,
                     Price50 = 25,
                     Price100 = 20,
-                   CategoryId = 1,
+                    CategoryId = 1,
                     ImageURL = ""
                 },
                 new Product
@@ -70,7 +71,7 @@ namespace Bulky.DataAccess.Data
                     Price = 50,
                     Price50 = 40,
                     Price100 = 35,
-                   CategoryId = 1,
+                    CategoryId = 1,
                     ImageURL = ""
                 },
                 new Product
@@ -84,7 +85,7 @@ namespace Bulky.DataAccess.Data
                     Price = 65,
                     Price50 = 60,
                     Price100 = 55,
-                   CategoryId = 2,
+                    CategoryId = 2,
                     ImageURL = ""
                 },
                 new Product
@@ -98,7 +99,7 @@ namespace Bulky.DataAccess.Data
                     Price = 27,
                     Price50 = 25,
                     Price100 = 20,
-                   CategoryId = 2,
+                    CategoryId = 2,
                     ImageURL = ""
                 },
                 new Product
@@ -115,6 +116,40 @@ namespace Bulky.DataAccess.Data
                     CategoryId = 3,
                     ImageURL = ""
                 });
+            modelBuilder.Entity<Company>().HasData(
+              new Company
+              {
+                  Id = 1,
+                  Name = "LTTS",
+                  StreetAddress="Hebbal Industrial Area",
+                  City="Mysuru",
+                  State="Karnataka",
+                  PostalCode="570017",
+                  PhoneNumber="0123456789"
+
+              },
+              new Company
+              {
+                  Id = 2,
+                  Name = "New age Book company",
+                  StreetAddress = "Dehradoon",
+                  City = "Dehradoon",
+                  State = "Sikkim",
+                  PostalCode = "600017",
+                  PhoneNumber = "2468135676"
+
+              },
+              new Company
+              {
+                  Id = 3,
+                  Name = "Amish Tripathi Book company",
+                  StreetAddress = "Delhi",
+                  City = "New Delhi",
+                  State = "New Delhi",
+                  PostalCode = "600001",
+                  PhoneNumber = "7411581154"
+
+              });
         }
     }
 }
