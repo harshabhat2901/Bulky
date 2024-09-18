@@ -178,6 +178,7 @@ namespace BulkyWeb.Areas.Identity.Pages.Account
                 user.PhoneNumber = Input.PhoneNumber;
                 user.StreetAddress = Input.StreetAddress;
                 user.City = Input.City;
+                user.State = Input.State;
                 user.PostalCode = Input.PostalCode;
                 if(Input.Role == SD.ROLE_COMPANY)
                     user.CompanyId = Input.CompanyId;

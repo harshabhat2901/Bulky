@@ -113,13 +113,16 @@ namespace BulkyWeb.Areas.Admin.Controllers
             List<Product> products = _uow.Product.GetAll(includeProperties: "Category").ToList();
             return Json(new {data = products });
         }
+
+        #endregion
+
         [HttpDelete]
         public IActionResult Delete(int? id)
         {
-            Product productToBeDeleted = _uow.Product.Get(u=> u.Id == id);
-            if(productToBeDeleted == null)
+            Product productToBeDeleted = _uow.Product.Get(u => u.Id == id);
+            if (productToBeDeleted == null)
             {
-                return Json(new {success = false, message = "Error While deleting"});
+                return Json(new { success = false, message = "Error While deleting" });
 
             }
             var oldImagePath = Path.Combine(_webHostEnvironment.WebRootPath, productToBeDeleted.ImageURL.TrimStart('\\'));
@@ -131,6 +134,5 @@ namespace BulkyWeb.Areas.Admin.Controllers
             return Json(new { success = true, message = "Deleted Successfully" });
 
         }
-        #endregion
     }
 }
