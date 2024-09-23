@@ -117,7 +117,7 @@ namespace BulkyWeb.Areas.Admin.Controllers
             orderVM.OrderHeader = _uow.OrderHeader.Get(u=> u.Id == orderVM.OrderHeader.Id);
             orderVM.OrderDetail = _uow.OrderDetail.GetAll(u => u.Id == orderVM.OrderHeader.Id);
 
-            var domain = "https://localhost:7081/";
+            var domain = Request.Scheme +  "//" + Request.Host.Value +"/";
             var successURL = domain + $"admin/order/PaymentConfirmation?id={orderVM.OrderHeader.Id}";
             _uow.OrderHeader.UpdateStripePaymentID(orderVM.OrderHeader.Id, "SessionID123", null);
             _uow.Save();

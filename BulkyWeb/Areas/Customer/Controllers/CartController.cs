@@ -164,7 +164,7 @@ namespace BulkyWeb.Areas.Customer.Controllers
                 //Stripe Logic
                 //I have simulated the same without stripe code
 
-                var domain = "https://localhost:7081/";
+                var domain = Request.Scheme + "//" + Request.Host.Value + "/";
                 var successURL = domain + $"customer/cart/OrderConfirmation?id={ShoppingCartVM.OrderHeader.Id}";
                 _unitOfWork.OrderHeader.UpdateStripePaymentID(ShoppingCartVM.OrderHeader.Id, "SessionID123", null);
                 _unitOfWork.Save();
