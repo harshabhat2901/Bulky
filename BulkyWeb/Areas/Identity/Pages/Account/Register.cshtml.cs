@@ -216,7 +216,14 @@ namespace BulkyWeb.Areas.Identity.Pages.Account
                     }
                     else
                     {
+                        if(User.IsInRole(SD.ROLE_ADMIN))
+                        {
+                            TempData["Success"] = "User Registered Successfully";
+                        }
+                        else
+                        { 
                         await _signInManager.SignInAsync(user, isPersistent: false);
+                        }
                         return LocalRedirect(returnUrl);
                     }
                 }

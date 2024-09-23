@@ -4,6 +4,7 @@ using Bulky.Models.ViewModels;
 using Bulky.Utilities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 using System.Reflection.Metadata.Ecma335;
 using System.Security.Claims;
 
@@ -52,9 +53,10 @@ namespace BulkyWeb.Areas.Customer.Controllers
         }
         public IActionResult Minus(int cartid)
         {
-            var cart = _unitOfWork.ShoppingCart.Get(u => u.Id == cartid);
+            var cart = _unitOfWork.ShoppingCart.Get(u => u.Id == cartid , tracking:true);
             if(cart.Count <= 1)
             {
+                HttpContext.Session.SetInt32(SD.SessionCart, _unitOfWork.ShoppingCart.GetAll(u => u.ApplicationUserId == cart.ApplicationUserId).Count() -1);
                 _unitOfWork.ShoppingCart.Remove(cart);
             }
             else
@@ -68,8 +70,9 @@ namespace BulkyWeb.Areas.Customer.Controllers
         }
         public IActionResult Remove(int cartid)
         {
-            var cart = _unitOfWork.ShoppingCart.Get(u => u.Id == cartid);
+            var cart = _unitOfWork.ShoppingCart.Get(u => u.Id == cartid , tracking:true);
             _unitOfWork.ShoppingCart.Remove(cart);
+            HttpContext.Session.SetInt32(SD.SessionCart, _unitOfWork.ShoppingCart.GetAll(u => u.ApplicationUserId == cart.ApplicationUserId).Count() - 1);
             _unitOfWork.Save();
             return RedirectToAction(nameof(Index));
         }
@@ -189,7 +192,7 @@ namespace BulkyWeb.Areas.Customer.Controllers
             List<ShoppingCart> shoppingCarts = _unitOfWork.ShoppingCart.GetAll(u=> u.ApplicationUserId == orderHeader.ApplicationUserId).ToList();
             _unitOfWork.ShoppingCart.RemoveRange(shoppingCarts);
             _unitOfWork.Save();
-
+            HttpContext.Session.Clear();
             return View(id);
         }
 

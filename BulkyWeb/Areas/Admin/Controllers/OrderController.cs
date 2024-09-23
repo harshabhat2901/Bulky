@@ -11,7 +11,7 @@ using System.Security.Claims;
 namespace BulkyWeb.Areas.Admin.Controllers
 {
     [Area("Admin")]
-    [Authorize]
+    [Authorize(Roles = SD.ROLE_ADMIN)]
     public class OrderController : Controller
     {
         private readonly IUnitOfWork _uow;

@@ -13,7 +13,7 @@ using System.Runtime.Intrinsics.Arm;
 namespace BulkyWeb.Areas.Admin.Controllers
 {
     [Area("Admin")]
-    [Authorize(Roles = SD.ROLE_ADMIN)]
+    [Authorize]
     public class CompanyController : Controller
     {
         private readonly IUnitOfWork _uow;
